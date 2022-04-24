@@ -3,6 +3,11 @@ import * as yargs from 'yargs';
 import chalk from 'chalk';
 import {Note} from './note';
 
+const TITLE = 'The title of the note';
+const BODY = 'The body of the note';
+const USER = 'The user of the note';
+const COLOR = 'The color of the note';
+
 /**
  * Write a note to the file system
  * @param user - the user input
@@ -30,22 +35,22 @@ yargs.command({
   describe: 'Add a new note',
   builder: {
     user: {
-      describe: 'The user of the note',
+      describe: USER,
       demandOption: true,
       type: 'string',
     },
     title: {
-      describe: 'The title of the note',
+      describe: TITLE,
       demandOption: true,
       type: 'string',
     },
     body: {
-      describe: 'The body of the note',
+      describe: BODY,
       demandOption: true,
       type: 'string',
     },
     color: {
-      describe: 'The color of the note',
+      describe: COLOR,
       demandOption: true,
       type: 'string',
     },
@@ -62,7 +67,7 @@ yargs.command({
   describe: 'List all notes',
   builder: {
     user: {
-      describe: 'The user of the note',
+      describe: USER,
       demandOption: true,
       type: 'string',
     },
@@ -115,12 +120,12 @@ yargs.command({
   describe: 'Read a note',
   builder: {
     user: {
-      describe: 'The user of the note',
+      describe: USER,
       demandOption: true,
       type: 'string',
     },
     title: {
-      describe: 'The title of the note',
+      describe: TITLE,
       demandOption: true,
       type: 'string',
     },
@@ -159,12 +164,12 @@ yargs.command({
   describe: 'Delete a note',
   builder: {
     user: {
-      describe: 'The user of the note',
+      describe: USER,
       demandOption: true,
       type: 'string',
     },
     title: {
-      describe: 'The title of the note',
+      describe: TITLE,
       demandOption: true,
       type: 'string',
     },
@@ -186,22 +191,22 @@ yargs.command({
   describe: 'Edit a note',
   builder: {
     user: {
-      describe: 'The user of the note',
+      describe: USER,
       demandOption: true,
       type: 'string',
     },
     title: {
-      describe: 'The title of the note',
+      describe: TITLE,
       demandOption: true,
       type: 'string',
     },
     body: {
-      describe: 'The body of the note',
+      describe: BODY,
       demandOption: true,
       type: 'string',
     },
     color: {
-      describe: 'The color of the note',
+      describe: COLOR,
       demandOption: true,
       type: 'string',
     },

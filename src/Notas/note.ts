@@ -9,7 +9,7 @@ export class Note {
    * @param body - the body
    * @param color - the color
    */
-  constructor(private readonly user: string, private title: string, private body: string, private color: string) {}
+  constructor(private readonly user: string, private readonly title: string, private readonly body: string, private readonly color: string) {}
 
   /**
    * GETTER: getUser - returns the user
