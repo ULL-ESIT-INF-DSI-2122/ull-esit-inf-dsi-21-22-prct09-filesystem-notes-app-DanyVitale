@@ -7,6 +7,7 @@ const TITLE = 'The title of the note';
 const BODY = 'The body of the note';
 const USER = 'The user of the note';
 const COLOR = 'The color of the note';
+const ERROR = 'Error: Invalid arguments';
 
 /**
  * Write a note to the file system
@@ -59,7 +60,7 @@ yargs.command({
     if (typeof argv.color === 'string' && typeof argv.user === 'string' && typeof argv.title === 'string' && typeof argv.body === 'string') {
       writeNote(argv.user, argv.title, argv.body, argv.color);
     } else {
-      console.log(chalk.red('Error: Invalid arguments'));
+      console.log(chalk.red(ERROR));
     }
   },
 }).command({
@@ -112,7 +113,7 @@ yargs.command({
         });
       });
     } else {
-      console.log(chalk.red('Error: Invalid arguments'));
+      console.log(chalk.red(ERROR));
     }
   },
 }).command({
@@ -156,7 +157,7 @@ yargs.command({
         }
       });
     } else {
-      console.log(chalk.red('Error: Invalid arguments'));
+      console.log(chalk.red(ERROR));
     }
   },
 }).command({
@@ -183,7 +184,7 @@ yargs.command({
         console.log(chalk.green('Note deleted successfully'));
       });
     } else {
-      console.log(chalk.red('Error: Invalid arguments'));
+      console.log(chalk.red(ERROR));
     }
   },
 }).command({
@@ -228,7 +229,7 @@ yargs.command({
         });
       });
     } else {
-      console.log(chalk.red('Error: Invalid arguments'));
+      console.log(chalk.red(ERROR));
     }
   },
 });
