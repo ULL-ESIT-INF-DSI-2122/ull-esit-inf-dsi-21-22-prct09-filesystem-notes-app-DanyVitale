@@ -12,13 +12,13 @@
 
 ## **ÍNDICE**   
 1. [INTRODUCCIÓN](#id1)
-2. [DESCRIPCIÓN](#id2)
-  3. [ADD](#id3)
-  4. [LIST](#id4)
-  5. [READ](#id5)
-  6. [DELETE](#id6)
-  7. [EDIT](#id7)
-8. [CONCLUSIONES](#id8)
+2. [DESCRIPCIÓN](#id2)  
+  a. [ADD](#id3)  
+  b. [LIST](#id4)  
+  c. [READ](#id5)  
+  d. [DELETE](#id6)  
+  e. [EDIT](#id7)
+3. [CONCLUSIONES](#id8)
 
 # INTRODUCCIÓN<a name="id1"></a>
 La práctica consta de una aplicación que permite gestionar notas de texto en un sistema de archivos. En específico permite al usuario crear, leer, modificar y eliminar notas de texto.  
