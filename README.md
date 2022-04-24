@@ -13,7 +13,12 @@
 ## **ÍNDICE**   
 1. [INTRODUCCIÓN](#id1)
 2. [DESCRIPCIÓN](#id2)
-3. [CONCLUSIÓN](#id3)
+  3. [ADD](#id3)
+  4. [LIST](#id4)
+  5. [READ](#id5)
+  6. [DELETE](#id6)
+  7. [EDIT](#id7)
+8. [CONCLUSIONES](#id8)
 
 # INTRODUCCIÓN<a name="id1"></a>
 La práctica consta de una aplicación que permite gestionar notas de texto en un sistema de archivos. En específico permite al usuario crear, leer, modificar y eliminar notas de texto.  
@@ -93,9 +98,8 @@ export function writeNote(user: string, title: string, body: string, color: stri
 ```
 Como se puede ver, lo primero que hace es comprobar si existe el directorio del usuario haciendo uso de la función `fs.existsSync`, en caso de que no exista se crea en la ruta `./src/Notas/` y haciendo uso de la función `fs.mkdirSync`.
 Sucesivamente, se escribe la nota en el fichero con la función `fs.writeFile` y se muestra un mensaje de éxito en la consola. En caso de error se muestra un mensaje de error.
-
+## ADD<a name="id3"></a>
 Empezamos con los que son los comandos de la aplicación. El primero en el que se desarrolla es `add` que permite al usuario crear una nueva nota.
-
 
 ```typescript
 yargs.command({
@@ -137,6 +141,8 @@ Lo primero que hace es obviamente, como en todos los comandos futuros, comprobar
 
 Una vez en el handler, se comprueba si los argumentos tienen el formato correcto, en caso de que no se muestra un mensaje de error. En caso de que si se procede a escribir la nota en el fichero con la función `writeNote`, creada anteriormente.
 
+# LIST<a name="id4"></a>
+
 Pasamos al comando `list` que permite al usuario listar todas las notas existentes y que se desarrolla de la siguiente manera:
 
 ```typescript
@@ -152,6 +158,9 @@ yargs.command({
   },
   handler: (argv: any) => {
     if (typeof argv.user === 'string') {
+      if (!fs.existsSync(`./src/Notas/${argv.user}`)) {
+        fs.mkdirSync(`./src/Notas/${argv.user}`);
+      }
       fs.readdir(`./src/Notas/${argv.user}`, (err, files) => {
         if (err) {
           throw err;
@@ -191,11 +200,160 @@ yargs.command({
     }
   },
 });
+```
 
-Lo primero es comprobar los argumentos, en este caso solo se necesita el atributo `user`. En el handler, se comprueba si el usuario existe en el directorio de notas, en caso de que no se muestra un mensaje de error y, en caso de que si se procede a leer el directorio y mostrar todas las notas existentes. 
+Lo primero es comprobar los argumentos, en este caso solo se necesita el atributo `user`.  
+En el handler, se comprueba si el usuario existe en el directorio de notas, en caso de que no se muestra un mensaje de error y, en caso de que si se procede a leer el directorio y mostrar todas las notas existentes.  
 Cabe resaltar que en el método de impresión de las notas se utiliza un switch para cambiar el color de la nota dependiendo del atributo `color` de ella y para el desarrollo de este comando se utilizaron los comandos `fs.readdir` y `fs.readFile` para leer el directorio y leer el fichero de la nota.
 
-El siguiente comando es 
- // Dividir todo en comandos, e.d., poner los comandos como titulos
+## READ<a name="id5"></a>
+El comando `read` permite al usuario leer una nota existente correspondiente a su carpeta de notas. Los parámetros que se necesitan son el usuario y el título de la nota y que, por lo tanto son los atributos a comprobar. Se desarrolla de la siguiente manera:
+
+```typescript
+yargs.command({
+  command: 'read',
+  describe: 'Read a note',
+  builder: {
+    user: {
+      describe: 'The user of the note',
+      demandOption: true,
+      type: 'string',
+    },
+    title: {
+      describe: 'The title of the note',
+      demandOption: true,
+      type: 'string',
+    },
+  },
+  handler: (argv: any) => {
+    if (typeof argv.user === 'string' && typeof argv.title === 'string') {
+      fs.readFile(`./src/Notas/${argv.user}/${argv.title}.json`, 'utf8', (err, data) => {
+        if (err) {
+          throw err;
+        }
+        const color = JSON.parse(data).color;
+        switch (color) {
+          case 'red':
+            console.log(chalk.red(JSON.parse(data).body));
+            break;
+          case 'green':
+            console.log(chalk.green(JSON.parse(data).body));
+            break;
+          case 'blue':
+            console.log(chalk.blue(JSON.parse(data).body));
+            break;
+          case 'yellow':
+            console.log(chalk.yellow(JSON.parse(data).body));
+            break;
+          default:
+            console.log(chalk.white(JSON.parse(data).body));
+            break;
+        }
+      });
+    } else {
+      console.log(chalk.red('Error: Invalid arguments'));
+    }
+  },
+});
+```
+
+Una vez comprobados los argumentos, se procede a leer la nota correspondiente al usuario y al título. A continuación, haciendo uso del comando `fs.readFile` se lee el fichero de la nota en la ruta correspondiente. Si la lectura tuvo éxito se muestra el contenido de la nota en el color correspondiente a la nota, en caso contrario se muestra un mensaje de error.
+
+## DELETE<a name="id6"></a>
+
+El comando `delete` permite al usuario, como se puede deducir, eliminar una nota existente correspondiente a su carpeta de notas.
+
+```typescript
+yargs.command({
+  command: 'delete',
+  describe: 'Delete a note',
+  builder: {
+    user: {
+      describe: 'The user of the note',
+      demandOption: true,
+      type: 'string',
+    },
+    title: {
+      describe: 'The title of the note',
+      demandOption: true,
+      type: 'string',
+    },
+  },
+  handler: (argv: any) => {
+    if (typeof argv.user === 'string' && typeof argv.title === 'string') {
+      fs.unlink(`./src/Notas/${argv.user}/${argv.title}.json`, (err) => {
+        if (err) {
+          throw err;
+        }
+        console.log(chalk.green('Note deleted successfully'));
+      });
+    } else {
+      console.log(chalk.red('Error: Invalid arguments'));
+    }
+  },
+});
+```
+
+Una vez comprobados los argumentos, se procede a eliminar la nota correspondiente al usuario y al título. A continuación, haciendo uso del comando `fs.unlink` se elimina el fichero de la nota en la ruta correspondiente. Si la eliminación tuvo éxito se muestra un mensaje en verde, en caso contrario se muestra un mensaje de error.
+
+## EDIT<a name="id7"></a>
+El comando `edit` permite al usuario editar una nota existente correspondiente a su carpeta de notas. Los parámetros a necesitar son iguales a los atributos de la clase Note, por lo que se desarrolla de la siguiente manera:
+
+```typescript
+yargs.command({
+  command: 'edit',
+  describe: 'Edit a note',
+  builder: {
+    user: {
+      describe: 'The user of the note',
+      demandOption: true,
+      type: 'string',
+    },
+    title: {
+      describe: 'The title of the note',
+      demandOption: true,
+      type: 'string',
+    },
+    body: {
+      describe: 'The body of the note',
+      demandOption: true,
+      type: 'string',
+    },
+    color: {
+      describe: 'The color of the note',
+      demandOption: true,
+      type: 'string',
+    },
+  },
+  handler: (argv: any) => {
+    if (typeof argv.user === 'string' && typeof argv.title === 'string' && typeof argv.body === 'string' && typeof argv.color === 'string') {
+      fs.readFile(`./src/Notas/${argv.user}/${argv.title}.json`, 'utf8', (err, data) => {
+        if (err) {
+          throw err;
+        }
+        const note = JSON.parse(data);
+        note.body = argv.body;
+        note.color = argv.color;
+        fs.writeFile(`./src/Notas/${argv.user}/${argv.title}.json`, JSON.stringify(note), (err) => {
+          if (err) {
+            throw err;
+          }
+          console.log(chalk.green('Note edited successfully'));
+        });
+      });
+    } else {
+      console.log(chalk.red('Error: Invalid arguments'));
+    }
+  },
+});
+```
+
+Comprobados los parámetros, se procede a leer la nota correspondiente al usuario y al título. A continuación, haciendo uso del comando `fs.readFile` se lee el fichero de la nota en la ruta correspondiente. Si la lectura tuvo éxito se procede a editar el contenido de la nota, en caso contrario se muestra un mensaje de error.
+A la hora de editar la nota, se procede a guardar el nuevo contenido en el fichero correspondiente y haciendo uso del comando `fs.writeFile` se guarda el nuevo contenido en el fichero correspondiente. Si la escritura tuvo éxito se muestra un mensaje en verde, en caso contrario se muestra un mensaje de error.
+
+# CONCLUSIONES<a name="id8"></a>
+La práctica ha sido muy interesante para aprender a trabajar con el lenguaje asíncrono Node.js y haciendo uso de librerias que llegaron a manifestarse muy cómodas a la hora de desarrollar la aplicación como por ejemplo, yargs, fs, chalk, etc. Además, se pudo profundizar el tema del sistema de archivos y el manejo de errores.
+Se intentó hacer una aplicación que permita al usuario crear, leer, listar, editar y eliminar notas, teniendo en cuenta que los usuarios no pueden conectarse simultáneamente a la aplicación.
+
 
 

@@ -69,6 +69,9 @@ yargs.command({
   },
   handler: (argv: any) => {
     if (typeof argv.user === 'string') {
+      if (!fs.existsSync(`./src/Notas/${argv.user}`)) {
+        fs.mkdirSync(`./src/Notas/${argv.user}`);
+      }
       fs.readdir(`./src/Notas/${argv.user}`, (err, files) => {
         if (err) {
           throw err;
